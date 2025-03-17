@@ -3,10 +3,7 @@ import { IDL_JSON } from '@/constants/idl';
 import { AnchorProvider, Program, setProvider, Wallet } from '@coral-xyz/anchor';
 import {
   Connection,
-  Keypair,
-  PublicKey,
-  Transaction,
-  VersionedTransaction
+  PublicKey
 } from '@solana/web3.js';
 
 import { Idl } from '@/types/contract';

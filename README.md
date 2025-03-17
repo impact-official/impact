@@ -1,4 +1,4 @@
-## Getting Started
+# Getting Started
 
 First, run the development server:
 
@@ -14,13 +14,18 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 
 
+# Feature
+
 `src/components/Body.tsx`
 
-the example is bridge sol from solana mainnet to sonic svm
-Change spl token address if you want.
+- the example to bridge sol from solana mainnet to sonic svm.
+  Change spl token address if you want.
+- The example of creating splToken from sonicsvmtestnet.
 
+# Road Map
 
+- **solana send message through hyperline from Solana testnet to sonictestnet.**(Running Test)
+  - With the file located at: `src/utils/message.ts`
+- **Sonic SVM purcharse Token by using SOL from Solana mainnet.**（Testing）
+  - By signing two signature and purchare.
 
-WIP: solana send message through hyperline from Solana testnet to sonictestnet is running test.
-
-With the file is located at: `src/utils/message.ts`

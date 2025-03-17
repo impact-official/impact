@@ -11,26 +11,11 @@ import {
 import { getProgram } from '@/utils/rpc';
 import * as anchor from '@coral-xyz/anchor';
 import { Wallet } from '@coral-xyz/anchor';
-import { ASSOCIATED_PROGRAM_ID } from '@coral-xyz/anchor/dist/cjs/utils/token';
 import { toWei } from '@hyperlane-xyz/utils';
-import {
-  createAssociatedTokenAccountInstruction,
-  getAssociatedTokenAddress,
-  getAssociatedTokenAddressSync,
-  TOKEN_2022_PROGRAM_ID,
-  TOKEN_PROGRAM_ID,
-} from '@solana/spl-token';
+import { getAssociatedTokenAddressSync } from '@solana/spl-token';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
-import {
-  Keypair,
-  PublicKey,
-  SystemProgram,
-  SYSVAR_RENT_PUBKEY,
-  Transaction,
-  TransactionMessage,
-  VersionedTransaction,
-} from '@solana/web3.js';
+import { Keypair, Transaction } from '@solana/web3.js';
 import { useCallback } from 'react';
 
 export const Body = () => {
@@ -92,12 +77,7 @@ export const Body = () => {
           mint: mint.publicKey,
           userTokenAccount,
           payer: publicKey,
-          // systemProgram: SystemProgram.programId,
-          // tokenProgram: TOKEN_2022_PROGRAM_ID,
-          // associatedTokenProgram: ASSOCIATED_PROGRAM_ID,
-          // rent: SYSVAR_RENT_PUBKEY,
         })
-        .signers([mint])
         .instruction();
 
       const connection = getSonicSVMTestnetConnection();
@@ -107,21 +87,18 @@ export const Body = () => {
       const latestBlockHash = await connection.getLatestBlockhash();
       transaction.recentBlockhash = latestBlockHash.blockhash;
 
-      const messageV0 = new TransactionMessage({
-        payerKey: publicKey,
-        recentBlockhash: latestBlockHash.blockhash,
-        instructions: [transactionInstruction],
-      }).compileToV0Message();
-
       // 创建 VersionedTransaction
-      const tx = new VersionedTransaction(messageV0);
       try {
-        const simulationResult = await connection.simulateTransaction(tx);
+        const simulationResult = await connection.simulateTransaction(
+          transaction
+        );
         console.log(`success`, simulationResult);
       } catch (error) {
         console.log(`error`, error);
       }
-      const signature = await sendTransaction(tx, connection);
+      const signature = await sendTransaction(transaction, connection, {
+        signers: [mint],
+      });
       console.log(`impact res`, signature);
     } catch (error) {
       console.log(`impact error`, error);
@@ -159,7 +136,7 @@ export const Body = () => {
         }}
         onClick={() => handleTransfer(0.01)}
       >
-        Transfer 0.1 To Sonic
+        Transfer 0.01 To Sonic
       </div>
 
       <div
